@@ -1,0 +1,6 @@
+obj/
+Properties/
+App.config
+LinkChain.csproj
+bin/
+.vs
