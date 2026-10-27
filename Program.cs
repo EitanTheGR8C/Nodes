@@ -17,28 +17,164 @@ namespace LinkChain
             //TestGroupCards(); // for cards
             //TestMarathon(); //for marathon
             //Test_Node(); //for constructive copying action
-            Node<int> lst = BuildCircle(6, 2, 10, 9, 4, 20);
+            TestCircular(); // for circular list
         }
 
 
         //Circular Linked List
         #region Circular Linked List
 
-        public static Node<int> BuildCircle(params int[] values)
+        public static void TestCircular()
         {
-            if (values.Length == 0) return null;
-            Node<int> lst = new Node<int>(values[0]);
-            Node<int> last = lst;
-            for (int i = 1; i < values.Length; i++)
+            Node<int> lst;
+            Node<int> pos;
+            string v;
+
+            //Q1 MakeCircular
+            lst = new Node<int>(1);
+            lst.SetNext(new Node<int>(2));
+            lst.GetNext().SetNext(new Node<int>(3));
+            lst = NodesCircles.MakeCircular(lst);
+            bool q1 = NodesCircles.IsCircleChain(lst);
+            Check("Q1 MakeCircular", q1);
+
+            //Q2 BreakCircle
+            lst = NodesCircles.BreakCircle(NodesCircles.BuildCircle(4, 5, 6, 7));
+            pos = lst;
+            while (pos.HasNext())
+                pos = pos.GetNext();
+            bool q2 = pos.GetValue() == 7;
+            Check("Q2 BreakCircle", q2);
+
+            //Q3 PrintCircle - בדיקה ידנית: צריך להדפיס -> 1 -> 2 -> 3 -> Loop
+            NodesCircles.PrintCircle(NodesCircles.BuildCircle(1, 2, 3));
+
+            //Q4 IsCircleChain
+            bool q4 = NodesCircles.IsCircleChain(NodesCircles.BuildCircle(1, 2))
+                && !NodesCircles.IsCircleChain(NodesCircles.BreakCircle(NodesCircles.BuildCircle(1, 2)));
+            Check("Q4 IsCircleChain", q4);
+
+            //Q5 CountCircleChain
+            bool q5 = NodesCircles.CountCircleChain(NodesCircles.BuildCircle(6, 2, 10, 9, 4, 20)) == 6;
+            Check("Q5 CountCircleChain", q5);
+
+            //Q6 SumCircle
+            bool q6 = NodesCircles.SumCircle(NodesCircles.BuildCircle(6, 2, 10, 9, 4, 20)) == 51;
+            Check("Q6 SumCircle", q6);
+
+            //Q7 ContainsCircle - כולל ערך בחוליה האחרונה
+            lst = NodesCircles.BuildCircle(6, 2, 10, 9, 4, 20);
+            bool q7 = NodesCircles.ContainsCircle(lst, 20) && !NodesCircles.ContainsCircle(lst, 99);
+            Check("Q7 ContainsCircle", q7);
+
+            //Q8 AddFirst
+            lst = NodesCircles.AddFirst(NodesCircles.BuildCircle(2, 3, 4), 1);
+            pos = lst;
+            v = "";
+            while (pos.GetNext() != lst)
             {
-                Node<int> node = new Node<int>(values[i]);
-                last.SetNext(node);
-                last = node;
+                v += pos.GetValue() + ",";
+                pos = pos.GetNext();
             }
-            last.SetNext(lst);          // סגירת המעגל
-            return lst;
+            v += pos.GetValue();
+            bool q8 = v == "1,2,3,4" && pos.GetNext() == lst;
+            Check("Q8 AddFirst", q8);
+
+            //Q9 AddLast
+            lst = NodesCircles.AddLast(NodesCircles.BuildCircle(1, 2, 3), 4);
+            pos = lst;
+            v = "";
+            while (pos.GetNext() != lst)
+            {
+                v += pos.GetValue() + ",";
+                pos = pos.GetNext();
+            }
+            v += pos.GetValue();
+            bool q9 = v == "1,2,3,4" && pos.GetNext() == lst;
+            Check("Q9 AddLast", q9);
+
+            //Q10 AddSumsBetween
+            lst = NodesCircles.AddSumsBetween(NodesCircles.BuildCircle(1, 2, 3));
+            pos = lst;
+            v = "";
+            while (pos.GetNext() != lst)
+            {
+                v += pos.GetValue() + ",";
+                pos = pos.GetNext();
+            }
+            v += pos.GetValue();
+            bool q10 = v == "1,3,2,5,3,4";
+            Check("Q10 AddSumsBetween", q10);
+
+            //Q11 AddBeforeEven
+            lst = NodesCircles.AddBeforeEven(NodesCircles.BuildCircle(3, 4, 7));
+            pos = lst;
+            v = "";
+            while (pos.GetNext() != lst)
+            {
+                v += pos.GetValue() + ",";
+                pos = pos.GetNext();
+            }
+            v += pos.GetValue();
+            bool q11 = v == "3,3,4,7";
+            Check("Q11 AddBeforeEven", q11);
+
+            //Q12 RemoveFirst
+            lst = NodesCircles.RemoveFirst(NodesCircles.BuildCircle(1, 2, 3, 4));
+            pos = lst;
+            v = "";
+            while (pos.GetNext() != lst)
+            {
+                v += pos.GetValue() + ",";
+                pos = pos.GetNext();
+            }
+            v += pos.GetValue();
+            bool q12 = v == "2,3,4";
+            Check("Q12 RemoveFirst", q12);
+
+            //Q13 RemoveLast
+            lst = NodesCircles.RemoveLast(NodesCircles.BuildCircle(1, 2, 3, 4));
+            pos = lst;
+            v = "";
+            while (pos.GetNext() != lst)
+            {
+                v += pos.GetValue() + ",";
+                pos = pos.GetNext();
+            }
+            v += pos.GetValue();
+            bool q13 = v == "1,2,3";
+            Check("Q13 RemoveLast", q13);
+
+            //Q14 RemoveEvens
+            lst = NodesCircles.RemoveEvens(NodesCircles.BuildCircle(4, 2, 5, 6, 7, 8));
+            pos = lst;
+            v = "";
+            while (pos.GetNext() != lst)
+            {
+                v += pos.GetValue() + ",";
+                pos = pos.GetNext();
+            }
+            v += pos.GetValue();
+            bool q14 = v == "5,7";
+            Check("Q14 RemoveEvens", q14);
+
+            //ALL - בדיקה מחוברת של כמה פעולות ביחד + כל הבדיקות הקודמות
+            lst = NodesCircles.BuildCircle(2, 3, 4);
+            lst = NodesCircles.AddFirst(lst, 1);
+            lst = NodesCircles.AddLast(lst, 5);
+            lst = NodesCircles.RemoveEvens(lst);
+            pos = lst;
+            v = "";
+            while (pos.GetNext() != lst)
+            {
+                v += pos.GetValue() + ",";
+                pos = pos.GetNext();
+            }
+            v += pos.GetValue();
+            bool all = q1 && q2 && q4 && q5 && q6 && q7 && q8 && q9 && q10 && q11 && q12 && q13 && q14
+                && v == "1,3,5" && NodesCircles.IsCircleChain(lst);
+            Check("ALL", all);
         }
-        // דוגמה: Node<int> lst = BuildCircle(6, 2, 10, 9, 4, 20);
 
 
 
