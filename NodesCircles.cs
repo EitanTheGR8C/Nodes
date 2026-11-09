@@ -47,6 +47,8 @@ namespace LinkChain
         //Q2
         public static Node<int> BreakCircle(Node<int> lst)//asuming not null and is already circle
         {
+            if (lst == null)
+                return null;
             Node<int> head = lst;
             while (lst.GetNext() != head)
             {
@@ -66,14 +68,15 @@ namespace LinkChain
                 return;
             }
             Node<T> head = lst;
-            string s = "";
+            string text = "";
             while (lst.GetNext() != head)
             {
-                s += $"-> {lst.GetValue()} ";
+                text += $"-> {lst.GetValue()} ";
                 lst = lst.GetNext();
             }
-            s += "-> Loop";
-            Console.WriteLine(s);
+            text += $"-> {lst.GetValue()} ";
+            text += "-> Loop";
+            Console.WriteLine(text);
         }
 
         //Q4
@@ -149,41 +152,41 @@ namespace LinkChain
         //Q8
         public static Node<int> AddFirst(Node<int> lst, int num)
         {
-            Node<int> ToAdd = new Node<int>(num);
+            Node<int> newNodes = new Node<int>(num);
 
             if (lst == null)
             {
-                ToAdd.SetNext(ToAdd);
-                return ToAdd;
+                newNodes.SetNext(newNodes);
+                return newNodes;
             }
                 
-            ToAdd.SetNext(lst);
+            newNodes.SetNext(lst);
             Node<int> head = lst;
             while (lst.GetNext() != head)
             {
                 lst = lst.GetNext();
             }
-            lst.SetNext(ToAdd);
-            return ToAdd;
+            lst.SetNext(newNodes);
+            return newNodes;
 
         }
 
         //Q9
         public static Node<int> AddLast(Node<int> lst, int num)
         {
-            Node<int> ToAdd = new Node<int>(num);
+            Node<int> newNodes = new Node<int>(num);
             if (lst == null)
             {
-                ToAdd.SetNext(ToAdd);
-                return ToAdd;
+                newNodes.SetNext(newNodes);
+                return newNodes;
             }
             Node<int> head = lst;
-            ToAdd.SetNext(head);
+            newNodes.SetNext(head);
             while (lst.GetNext() != head )
             {
                 lst = lst.GetNext();
             }
-            lst.SetNext(ToAdd);
+            lst.SetNext(newNodes);
             return head;
         }
 
@@ -195,9 +198,9 @@ namespace LinkChain
             {
                 int sum1 = lst.GetValue();
                 sum1 += lst.GetNext().GetValue();
-                Node<int> ToAdd1 = new Node<int>(sum1, lst.GetNext());
+                Node<int> newSumNode = new Node<int>(sum1, lst.GetNext());
 
-                lst.SetNext(ToAdd1);
+                lst.SetNext(newSumNode);
 
                 lst = lst.GetNext().GetNext();
 
@@ -205,8 +208,8 @@ namespace LinkChain
             int sum = lst.GetValue();
             sum += head.GetValue();
 
-            Node<int> ToAdd = new Node<int>(sum, head);
-            lst.SetNext(ToAdd);
+            Node<int> newNode = new Node<int>(sum, head);
+            lst.SetNext(newNode);
 
             return head;
         }
