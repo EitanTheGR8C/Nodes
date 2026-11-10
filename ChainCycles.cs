@@ -78,6 +78,15 @@ namespace LinkChain
             return false;
         }
 
+        // Question 1c: If we compared nodes by VALUE instead of by reference, a linear
+        // chain that contains duplicate values would look like it has a cycle.
+        // Example: 1 -> 2 -> 3 -> 2 -> 4 (linear, the value 2 appears twice).
+        // A value comparison would treat the second 2 as the same node as the first 2
+        // and report "cycle found", even though the chain ends and has no cycle.
+        // Two nodes are the same node only if they are the same object in memory,
+        // so we must compare references (==) and never values.
+
+
         // Question 2 - where does the cycle start
         // Time O(n) - one pass to meet, then one pass to walk back to the start. Space O(1) - only two pointers.
         // Why they meet at the cycle start: when stage 1 ends, fast walked exactly
@@ -89,24 +98,23 @@ namespace LinkChain
         // together.
         public static Node<int> CycleStart(Node<int> chain)
         {
-            if(chain == null)
+            if (chain == null)
                 return null;
             Node<int> slow = chain;
             Node<int> fast = chain;
-
             slow = slow.GetNext();
             fast = fast.GetNext();
             if (fast != null)
                 fast = fast.GetNext();
+            // a chain of one linear node ends here
             if (slow == null || fast == null)
                 return null;
-
-            while (fast != slow)
+            while (slow != fast)
             {
-                if (fast == null)
+                if (fast == null || fast.GetNext() == null)
                     return null;
-                fast = fast.GetNext().GetNext();
                 slow = slow.GetNext();
+                fast = fast.GetNext().GetNext();
             }
             slow = chain;
             while (slow != fast)
@@ -115,7 +123,6 @@ namespace LinkChain
                 fast = fast.GetNext();
             }
             return fast;
-
         }
 
         // Question 3a - number of distinct nodes
@@ -188,28 +195,30 @@ namespace LinkChain
 
             Node<int> cycleStart = CycleStart(chain);
             Node<int> current = chain;
+            bool inCycle = false;
 
             while (current != null)
             {
                 if (current == cycleStart)
+                {
                     Console.Write("(");
+                    inCycle = true;
+                }
 
                 Console.Write(current.GetValue());
 
-                Node<int> next = current.GetNext();
-                if (cycleStart != null && next == cycleStart)
+                if (inCycle && current.GetNext() == cycleStart)
                 {
-                    // last node of the cycle: close the bracket and stop
                     Console.Write(")");
-                    Console.WriteLine();
-                    return;
+                    break;
                 }
-                if (next != null)
+
+                if (current.HasNext())
                     Console.Write("->");
-                current = next;
+
+                current = current.GetNext();
             }
             Console.WriteLine();
-
         }
 
         // Question 5 - disconnect the cycle
