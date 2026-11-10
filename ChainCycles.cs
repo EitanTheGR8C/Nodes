@@ -46,33 +46,43 @@ namespace LinkChain
             last.SetNext(cycleStart);
         }
 
+        //Explanation for N: n = repesents the number of distinc nodes in a chain -- same throught this homework
+
 
         // Question 1a
-        // Time: O(?), Space: O(?)   <-- fill in after you write it
+        // Time O(n^2) - Contains rescans the list for every node. Space O(n) - the list can grow to n nodes.
         public static bool HasCycle(Node<int> chain)
         {
-            // Create a List<Node<int>> for the nodes you already visited.
-            // Walk the chain node by node.
-            // Each step: if the current node is already in the list (Contains),
-            // you were here before, so there is a cycle -> return true.
-            // Otherwise add it to the list and move to the next node.
-            // If you reach null, the chain is linear -> return false.
+            List<Node<int>> visited = new List<Node<int>>();
+            Node<int> current = chain;
+            while (current != null)
+            {
+                if (visited.Contains(current))
+                    return true;
+                visited.Add(current);
+                current = current.GetNext();
+            }
             return false;
         }
 
         // Question 1b - tortoise and hare, no collections allowed
-        // Time: O(?), Space: O(?)   <-- fill in after you write it
+        // Time O(n) - each pointer passes every node at most a constant number of times. Space O(1) - only two pointers.
         public static bool HasCycleFast(Node<int> chain)
         {
-            // Two references starting at chain: slow and fast.
-            // Loop: slow moves 1 step, fast moves 2 steps.
-            // If fast reaches null (or its next is null), the chain is linear -> return false.
-            // If slow == fast (same reference!), they met inside a cycle -> return true.
+            Node<int> slow = chain;
+            Node<int> fast = chain;
+            while (fast != null && fast.GetNext() != null)
+            {
+                slow = slow.GetNext();
+                fast = fast.GetNext().GetNext();
+                if (slow == fast)
+                    return true;
+            }
             return false;
         }
 
         // Question 2 - where does the cycle start
-        // Time: O(?), Space: O(?)
+        // Time O(n) - one pass to meet, then one pass to walk back to the start. Space O(1) - only two pointers.
         public static Node<int> CycleStart(Node<int> chain)
         {
             // Stage 1: tortoise and hare until they meet.
@@ -85,7 +95,7 @@ namespace LinkChain
         }
 
         // Question 3a - number of distinct nodes
-        // Time: O(?), Space: O(?)
+        // Time O(n) - a constant number of passes over the chain. Space O(1) - counters only.
         public static int Length(Node<int> chain)
         {
             // null -> 0.
@@ -95,7 +105,7 @@ namespace LinkChain
         }
 
         // Question 3b
-        // Time: O(?), Space: O(?)
+        // Time O(n) - one walk around the cycle. Space O(1) - counters only.
         public static int CycleLength(Node<int> chain)
         {
             // No cycle -> 0.
@@ -104,7 +114,7 @@ namespace LinkChain
             return 0;
         }
 
-        // Time: O(?), Space: O(?)
+        // Time O(n) - one walk to the cycle start (or to null). Space O(1) - counters only.
         public static int TailLength(Node<int> chain)
         {
             // Linear: count all the nodes (that IS the tail).
@@ -113,7 +123,7 @@ namespace LinkChain
         }
 
         // Question 4 - print with the cycle in parentheses
-        // Time: O(?), Space: O(?)  (hint: must stay O(1), so Console.Write, no long string)
+        // Time O(n) - every node is printed exactly once. Space O(1) - Console.Write directly, no long string is built.
         public static void PrintChain(Node<int> chain)
         {
             // null -> print an empty line and stop.
@@ -126,7 +136,7 @@ namespace LinkChain
         }
 
         // Question 5 - disconnect the cycle
-        // Time: O(?), Space: O(?)
+        // Time O(n) - finding the cycle start plus one walk around the cycle. Space O(1) - pointers only.
         public static void BreakCycle(Node<int> chain)
         {
             // null or linear (HasCycleFast) -> do nothing.
@@ -139,7 +149,7 @@ namespace LinkChain
         }
 
         // Question 6 (challenge) - middle node of a LINEAR chain
-        // Time: O(?), Space: O(?)
+        // Time O(n) - a single scan of the chain. Space O(1) - only two pointers.
         public static Node<int> Middle(Node<int> chain)
         {
             // null -> null.
