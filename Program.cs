@@ -12,15 +12,24 @@ namespace LinkChain
     {
         static void Main(string[] args)
         {
+            #region old work
             //TestUtils.RunAll(); //from first part of the project
             //TestPerfume(); // for perfume 
             //TestGroupCards(); // for cards
             //TestMarathon(); //for marathon
             //Test_Node(); //for constructive copying action
             //TestCircular(); // for circular list
+            #endregion old work
+
+
+
         }
 
 
+
+
+
+        #region old checks
         //Circular Linked List
         #region Circular Linked List
 
@@ -650,6 +659,7 @@ namespace LinkChain
         }
         #endregion Perfume
         // --- Perfume ---
+        #endregion old checks
 
     }
 }//YNWA//
