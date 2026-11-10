@@ -8,8 +8,6 @@ namespace LinkChain
 {
     internal class ChainCycles
     {
-
-
         public static Node<int> BuildChain(int length)
         {
             if (length <= 0)
@@ -46,8 +44,7 @@ namespace LinkChain
             last.SetNext(cycleStart);
         }
 
-        //Explanation for N: n = repesents the number of distinc nodes in a chain -- same throught this homework
-
+        //Explanation for N: n = repesents the number of distinc nodes in a chain -- same throught this class
 
         // Question 1a
         // Time O(n^2) - Contains rescans the list for every node. Space O(n) - the list can grow to n nodes.
@@ -83,35 +80,83 @@ namespace LinkChain
 
         // Question 2 - where does the cycle start
         // Time O(n) - one pass to meet, then one pass to walk back to the start. Space O(1) - only two pointers.
+        // Why they meet at the cycle start: when stage 1 ends, fast walked exactly
+        // twice as many steps as slow, so the difference between them is a whole
+        // number of laps around the cycle. That means the distance from the chain
+        // start to the cycle start equals the distance from the meeting point to
+        // the cycle start (going around the cycle). Moving slow back to the start
+        // and advancing both one step at a time, they arrive at the cycle start
+        // together.
         public static Node<int> CycleStart(Node<int> chain)
         {
-            // Stage 1: tortoise and hare until they meet.
-            // If fast hits null, the chain is linear -> return null.
-            // Stage 2: move slow back to the start of the chain.
-            // Move BOTH one step at a time until slow == fast.
-            // Where they meet is the cycle start -> return it.
-            // Required comment: explain in your own words why they meet at the cycle start.
-            return null;
+            if(chain == null)
+                return null;
+            Node<int> slow = chain;
+            Node<int> fast = chain;
+
+            slow = slow.GetNext();
+            fast = fast.GetNext();
+            if (fast != null)
+                fast = fast.GetNext();
+            if (slow == null || fast == null)
+                return null;
+
+            while (fast != slow)
+            {
+                if (fast == null)
+                    return null;
+                fast = fast.GetNext().GetNext();
+                slow = slow.GetNext();
+            }
+            slow = chain;
+            while (slow != fast)
+            {
+                slow = slow.GetNext();
+                fast = fast.GetNext();
+            }
+            return fast;
+
         }
 
         // Question 3a - number of distinct nodes
         // Time O(n) - a constant number of passes over the chain. Space O(1) - counters only.
         public static int Length(Node<int> chain)
         {
-            // null -> 0.
-            // Linear (check with HasCycleFast): count nodes until null.
-            // Cyclic: return TailLength(chain) + CycleLength(chain).
-            return 0;
+            if (chain == null)
+                return 0;
+
+            if (!HasCycleFast(chain))
+            {
+                int count = 0;
+                Node<int> current = chain;
+                while (current != null)
+                {
+                    count++;
+                    current = current.GetNext();
+                }
+                return count;
+            }
+
+            return TailLength(chain) + CycleLength(chain);
         }
 
         // Question 3b
         // Time O(n) - one walk around the cycle. Space O(1) - counters only.
         public static int CycleLength(Node<int> chain)
         {
-            // No cycle -> 0.
-            // Start from CycleStart(chain) and count steps
-            // until you arrive back at it. That count is lambda.
-            return 0;
+            Node<int> current = CycleStart(chain);
+            if( current == null )
+                return 0;
+            int cnt = 0;
+            Node<int> start = current;
+            current = current.GetNext();
+            cnt++;
+            while (start != current)
+            {
+                current = current.GetNext();
+                cnt++;
+            }
+            return cnt;
         }
 
         // Time O(n) - one walk to the cycle start (or to null). Space O(1) - counters only.
@@ -119,45 +164,81 @@ namespace LinkChain
         {
             // Linear: count all the nodes (that IS the tail).
             // Cyclic: count from chain until you reach CycleStart(chain). That's mu.
-            return 0;
+            if (chain == null)
+                return 0;
+            Node<int> start_circle = CycleStart(chain);
+            int cnt = 0;
+            while (chain != start_circle)
+            {
+                chain = chain.GetNext();
+                cnt++;
+            }    
+            return cnt;
         }
 
         // Question 4 - print with the cycle in parentheses
         // Time O(n) - every node is printed exactly once. Space O(1) - Console.Write directly, no long string is built.
         public static void PrintChain(Node<int> chain)
         {
-            // null -> print an empty line and stop.
-            // Find the cycle start with CycleStart (null means linear).
-            // Walk the chain printing each value with Console.Write, "->" between nodes.
-            // Right before printing the cycle-start node, print "(".
-            // Cyclic: stop after the node whose GetNext() is the cycle start, then print ")".
-            // Linear: stop at null.
-            // Each node prints exactly once.
+            if (chain == null)
+            {
+                Console.WriteLine();
+                return;
+            }
+
+            Node<int> cycleStart = CycleStart(chain);
+            Node<int> current = chain;
+
+            while (current != null)
+            {
+                if (current == cycleStart)
+                    Console.Write("(");
+
+                Console.Write(current.GetValue());
+
+                Node<int> next = current.GetNext();
+                if (cycleStart != null && next == cycleStart)
+                {
+                    // last node of the cycle: close the bracket and stop
+                    Console.Write(")");
+                    Console.WriteLine();
+                    return;
+                }
+                if (next != null)
+                    Console.Write("->");
+                current = next;
+            }
+            Console.WriteLine();
+
         }
 
         // Question 5 - disconnect the cycle
         // Time O(n) - finding the cycle start plus one walk around the cycle. Space O(1) - pointers only.
         public static void BreakCycle(Node<int> chain)
         {
-            // null or linear (HasCycleFast) -> do nothing.
-            // Find the cycle start with CycleStart.
-            // Walk until you find the node whose GetNext() IS the cycle start
-            // (that's the last node of the cycle).
-            // SetNext(null) on it. No other change allowed.
-            // Test both edge cases: cycle starting at the first node,
-            // and a last node pointing at itself.
+            if (chain == null || !HasCycleFast(chain))
+                return;
+            Node<int> start = CycleStart(chain);
+            Node<int> current = start;
+            while (current.GetNext() != start)
+            { current = current.GetNext(); }
+            current.SetNext(null);
         }
 
         // Question 6 (challenge) - middle node of a LINEAR chain
         // Time O(n) - a single scan of the chain. Space O(1) - only two pointers.
-        public static Node<int> Middle(Node<int> chain)
+        public static Node<int> Middle(Node<int> chain)//assuming linear
         {
-            // null -> null.
-            // Tortoise and hare again: slow 1 step, fast 2 steps.
-            // When fast can't move two steps anymore, slow is at the middle.
-            // Even length: you want the SECOND middle (length 6 -> node 4),
-            // so pay attention to exactly when you stop.
-            return null;
+            if(chain == null)
+                return null;
+            Node<int> fast = chain;
+            Node<int> slow = chain;
+            while (fast != null && fast.GetNext() != null)
+            {
+                slow = slow.GetNext();
+                fast = fast.GetNext().GetNext();
+            }
+            return slow;
         }
 
     }
