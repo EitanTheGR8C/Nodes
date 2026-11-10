@@ -21,12 +21,112 @@ namespace LinkChain
             //TestCircular(); // for circular list
             #endregion old work
 
-
+            TestChainCycles();
 
         }
 
 
+        static void TestChainCycles()
+        {
+            Console.WriteLine("Testing chains from section 3:\n");
 
+            // Chain 1: 14 nodes, cycle starts at node 7
+            Node<int> chain1 = ChainCycles.BuildChain(14);
+            ChainCycles.MakeCycle(chain1, 7);
+            Console.WriteLine("Chain 1: 14 nodes, cycle at 7");
+            Console.WriteLine($"HasCycle: {ChainCycles.HasCycle(chain1)}, HasCycleFast: {ChainCycles.HasCycleFast(chain1)} (expected True)");
+            Console.WriteLine($"Cycle start: {ChainCycles.CycleStart(chain1).GetValue()} (expected 7)");
+            Console.WriteLine($"Length: {ChainCycles.Length(chain1)} (expected 14)");
+            Console.WriteLine($"Tail: {ChainCycles.TailLength(chain1)} (expected 6), Cycle: {ChainCycles.CycleLength(chain1)} (expected 8)");
+            Console.Write("PrintChain: ");
+            ChainCycles.PrintChain(chain1);
+            Console.WriteLine("(expected 1->2->3->4->5->6->(7->8->9->10->11->12->13->14))\n");
+
+            // Chain 2: 5 nodes, linear
+            Node<int> chain2 = ChainCycles.BuildChain(5);
+            Console.WriteLine("Chain 2: 5 nodes, linear");
+            Console.WriteLine($"HasCycle: {ChainCycles.HasCycle(chain2)}, HasCycleFast: {ChainCycles.HasCycleFast(chain2)} (expected False)");
+            Console.WriteLine($"Cycle start is null: {ChainCycles.CycleStart(chain2) == null} (expected True)");
+            Console.WriteLine($"Length: {ChainCycles.Length(chain2)} (expected 5)");
+            Console.WriteLine($"Tail: {ChainCycles.TailLength(chain2)} (expected 5), Cycle: {ChainCycles.CycleLength(chain2)} (expected 0)");
+            Console.Write("PrintChain: ");
+            ChainCycles.PrintChain(chain2);
+            Console.WriteLine("(expected 1->2->3->4->5)\n");
+
+            // Chain 3: 5 nodes, cycle from the first node
+            Node<int> chain3 = ChainCycles.BuildChain(5);
+            ChainCycles.MakeCycle(chain3, 1);
+            Console.WriteLine("Chain 3: 5 nodes, cycle at 1");
+            Console.WriteLine($"HasCycle: {ChainCycles.HasCycle(chain3)}, HasCycleFast: {ChainCycles.HasCycleFast(chain3)} (expected True)");
+            Console.WriteLine($"Cycle start: {ChainCycles.CycleStart(chain3).GetValue()} (expected 1)");
+            Console.WriteLine($"Length: {ChainCycles.Length(chain3)} (expected 5)");
+            Console.WriteLine($"Tail: {ChainCycles.TailLength(chain3)} (expected 0), Cycle: {ChainCycles.CycleLength(chain3)} (expected 5)");
+            Console.Write("PrintChain: ");
+            ChainCycles.PrintChain(chain3);
+            Console.WriteLine("(expected (1->2->3->4->5))\n");
+
+            // Chain 4: 5 nodes, last node points at itself
+            Node<int> chain4 = ChainCycles.BuildChain(5);
+            ChainCycles.MakeCycle(chain4, 5);
+            Console.WriteLine("Chain 4: 5 nodes, cycle at 5");
+            Console.WriteLine($"HasCycle: {ChainCycles.HasCycle(chain4)}, HasCycleFast: {ChainCycles.HasCycleFast(chain4)} (expected True)");
+            Console.WriteLine($"Cycle start: {ChainCycles.CycleStart(chain4).GetValue()} (expected 5)");
+            Console.WriteLine($"Length: {ChainCycles.Length(chain4)} (expected 5)");
+            Console.WriteLine($"Tail: {ChainCycles.TailLength(chain4)} (expected 4), Cycle: {ChainCycles.CycleLength(chain4)} (expected 1)");
+            Console.Write("PrintChain: ");
+            ChainCycles.PrintChain(chain4);
+            Console.WriteLine("(expected 1->2->3->4->(5))\n");
+
+            // Chain 5: one node, linear
+            Node<int> chain5 = ChainCycles.BuildChain(1);
+            Console.WriteLine("Chain 5: one node, linear");
+            Console.WriteLine($"HasCycle: {ChainCycles.HasCycle(chain5)}, HasCycleFast: {ChainCycles.HasCycleFast(chain5)} (expected False)");
+            Console.WriteLine($"Cycle start is null: {ChainCycles.CycleStart(chain5) == null} (expected True)");
+            Console.WriteLine($"Length: {ChainCycles.Length(chain5)} (expected 1)");
+            Console.WriteLine($"Tail: {ChainCycles.TailLength(chain5)} (expected 1), Cycle: {ChainCycles.CycleLength(chain5)} (expected 0)");
+            Console.Write("PrintChain: ");
+            ChainCycles.PrintChain(chain5);
+            Console.WriteLine("(expected 1)\n");
+
+            // Chain 6: one node pointing at itself
+            Node<int> chain6 = ChainCycles.BuildChain(1);
+            ChainCycles.MakeCycle(chain6, 1);
+            Console.WriteLine("Chain 6: one node, cycle at 1");
+            Console.WriteLine($"HasCycle: {ChainCycles.HasCycle(chain6)}, HasCycleFast: {ChainCycles.HasCycleFast(chain6)} (expected True)");
+            Console.WriteLine($"Cycle start: {ChainCycles.CycleStart(chain6).GetValue()} (expected 1)");
+            Console.WriteLine($"Length: {ChainCycles.Length(chain6)} (expected 1)");
+            Console.WriteLine($"Tail: {ChainCycles.TailLength(chain6)} (expected 0), Cycle: {ChainCycles.CycleLength(chain6)} (expected 1)");
+            Console.Write("PrintChain: ");
+            ChainCycles.PrintChain(chain6);
+            Console.WriteLine("(expected (1))\n");
+
+            // Chain 7: empty chain
+            Node<int> chain7 = null;
+            Console.WriteLine("Chain 7: empty chain");
+            Console.WriteLine($"HasCycle: {ChainCycles.HasCycle(chain7)}, HasCycleFast: {ChainCycles.HasCycleFast(chain7)} (expected False)");
+            Console.WriteLine($"Cycle start is null: {ChainCycles.CycleStart(chain7) == null} (expected True)");
+            Console.WriteLine($"Length: {ChainCycles.Length(chain7)} (expected 0)");
+            Console.WriteLine($"Tail: {ChainCycles.TailLength(chain7)} (expected 0), Cycle: {ChainCycles.CycleLength(chain7)} (expected 0)");
+            Console.Write("PrintChain: ");
+            ChainCycles.PrintChain(chain7);
+            Console.WriteLine("(expected an empty line)\n");
+            // BreakCycle: after the break the chain must be linear
+            Node<int> chain8 = ChainCycles.BuildChain(14);
+            ChainCycles.MakeCycle(chain8, 7);
+            ChainCycles.BreakCycle(chain8);
+            Console.WriteLine("BreakCycle on 14 nodes with cycle at 7:");
+            Console.WriteLine($"HasCycle after break: {ChainCycles.HasCycle(chain8)} (expected False)");
+            Console.Write("PrintChain after break: ");
+            ChainCycles.PrintChain(chain8);
+            Console.WriteLine("(expected 1->2->3->4->5->6->7->8->9->10->11->12->13->14, no brackets)\n");
+
+            // Middle on linear chains of length 1, 2, 5 and 6
+            Console.WriteLine("Middle tests:");
+            Console.WriteLine($"Middle of 1: {ChainCycles.Middle(ChainCycles.BuildChain(1)).GetValue()} (expected 1)");
+            Console.WriteLine($"Middle of 2: {ChainCycles.Middle(ChainCycles.BuildChain(2)).GetValue()} (expected 2)");
+            Console.WriteLine($"Middle of 5: {ChainCycles.Middle(ChainCycles.BuildChain(5)).GetValue()} (expected 3)");
+            Console.WriteLine($"Middle of 6: {ChainCycles.Middle(ChainCycles.BuildChain(6)).GetValue()} (expected 4)");
+        }
 
 
         #region old checks
@@ -205,7 +305,7 @@ namespace LinkChain
 
             // Stages 1 + 2:
             Check("same values", SameValues(ls, ls2));
-            Check("different head", !ReferenceEquals(ls, ls2));
+            Check("different head", !ChainCycles.ReferenceEquals(ls, ls2));
             Check("no shared nodes", NoSharedNodes(ls, ls2));
 
             // Stage 3:
@@ -242,7 +342,7 @@ namespace LinkChain
             Node<int> oneCopy = new Node<int>(one);
 
             Check("one node: same values", SameValues(one, oneCopy));//check same values / different head / no shared 
-            Check("one node: different head", !ReferenceEquals(one, oneCopy));
+            Check("one node: different head", !ChainCycles.ReferenceEquals(one, oneCopy));
             Check("one node: no shared nodes", NoSharedNodes(one, oneCopy));
 
             any_value = 321;// change oneCopy and check that one didn't change 
@@ -252,7 +352,7 @@ namespace LinkChain
             // Stage 5b:
             Node<int> ls3 = new Node<int>(ls2);//copy of the copy
             Check("copy of copy: same values", SameValues(ls2, ls3));//check same values / different head / no shared 
-            Check("copy of copy: different head", !ReferenceEquals(ls2, ls3));
+            Check("copy of copy: different head", !ChainCycles.ReferenceEquals(ls2, ls3));
             Check("copy of copy: no shared nodes", NoSharedNodes(ls2, ls3));
 
             Console.WriteLine();
@@ -282,7 +382,7 @@ namespace LinkChain
         {
             while (a != null && b != null)
             {
-                if (ReferenceEquals(a, b))
+                if (ChainCycles.ReferenceEquals(a, b))
                     return false;// same object -> shared node
 
                 a = a.GetNext();
