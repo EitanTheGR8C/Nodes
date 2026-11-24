@@ -13,35 +13,38 @@ namespace LinkChain
 
         public Monomial(int factor, int exponent)
         {
-            // TODO: initialize the fields
+            this.factor = factor;
+            this.exponent = exponent;
         }
-
         public int GetFactor()
-        {
-            // TODO
-            return 0;
-        }
-
+        { return this.factor; }
         public void SetFactor(int factor)
-        {
-            // TODO
-        }
-
+        { this.factor = factor; }
         public int GetExponent()
-        {
-            // TODO
-            return 0;
-        }
+        { return this.exponent; }
 
         public void SetExponent(int exponent)
-        {
-            // TODO
-        }
-
+        { this.exponent = exponent; }
         public override string ToString()
         {
-            // TODO: follow the formatting rules
-            return "";
+            if (this.factor == 0)
+                return "+0";
+            int number = this.factor;
+            string sign = "+";
+            if (number < 0)
+            {
+                sign = "-";
+                number = -number;
+            }
+            if (this.exponent == 0)
+                return sign + number;
+            string result = sign;
+            if (number != 1)
+                result += number;
+            result += "x";
+            if (this.exponent != 1)
+                result += "^" + this.exponent;
+            return result;
         }
     }
 }
