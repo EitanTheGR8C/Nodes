@@ -121,10 +121,6 @@ namespace LinkChain
             poly2 = PolynomialSort(poly2);
             poly1 = ReduceSortedPolynomial(poly1);
             poly2 = ReduceSortedPolynomial(poly2);
-            if (poly1 == null)
-                return poly2;
-            if (poly2 == null)
-                return poly1;
 
             Node<Monomial> result = null;
             Node<Monomial> last = null;
