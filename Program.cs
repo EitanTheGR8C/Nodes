@@ -18,14 +18,18 @@ namespace LinkChain
             //TestGroupCards(); // for cards
             //TestMarathon(); //for marathon
             //Test_Node(); //for constructive copying action
-            //TestCircular(); // for circular list
+            //TestCircular(); // for circular 
+            //TestChainCycles(); // for chain cycles
             #endregion old work
 
-            TestChainCycles();
-
+            PolynomialTests.RunAll();
         }
 
 
+        #region old checks
+
+        //Chain Cycles
+        #region Chain Cycles
         static void TestChainCycles()
         {
             Console.WriteLine("Testing chains from section 3:\n");
@@ -127,9 +131,9 @@ namespace LinkChain
             Console.WriteLine($"Middle of 5: {ChainCycles.Middle(ChainCycles.BuildChain(5)).GetValue()} (expected 3)");
             Console.WriteLine($"Middle of 6: {ChainCycles.Middle(ChainCycles.BuildChain(6)).GetValue()} (expected 4)");
         }
+        #endregion Chain Cycles
+        //Chain Cycles
 
-
-        #region old checks
         //Circular Linked List
         #region Circular Linked List
 
@@ -285,12 +289,8 @@ namespace LinkChain
             Check("ALL", all);
         }
 
-
-
-
         #endregion Circular Linked List
         //Circular Linked List
-
 
         //Constructive Copying Action
         #region Constructive Copying Action
@@ -436,7 +436,6 @@ namespace LinkChain
 
         #endregion Constructive Copying Action
         //Constructive Copying Action
-
 
         //Marathon
         #region Mrtn

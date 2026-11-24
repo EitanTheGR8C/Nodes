@@ -8,10 +8,35 @@ namespace LinkChain
 {
     internal class Polynomial
     {
+        //Time: O(n^2)
+        //Space: O(1)
         public static Node<Monomial> PolynomialSort(Node<Monomial> poly)
         {
-            // TODO: sort by exponent, descending
-            return null;
+            Node<Monomial> p = poly;
+
+            while (p != null)
+            {
+                Node<Monomial> biggest = p;
+                Node<Monomial> q = p.GetNext();
+
+                while (q != null)
+                {
+                    if (q.GetValue().GetExponent() > biggest.GetValue().GetExponent())
+                    {
+                        biggest = q;
+                    }
+
+                    q = q.GetNext();
+                }
+
+                Monomial temp = p.GetValue();
+                p.SetValue(biggest.GetValue());
+                biggest.SetValue(temp);
+
+                p = p.GetNext();
+            }
+
+            return poly;
         }
 
         public static Node<Monomial> ReduceSortedPolynomial(Node<Monomial> poly)
