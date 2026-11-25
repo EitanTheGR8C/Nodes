@@ -1,6 +1,6 @@
 # LinkChain
 
-A C# console project about **linked lists**. It is built around a generic `Node<T>` class and includes a library of list algorithms (iterative and recursive), circular lists, chains with cycles (tortoise and hare), a copy constructor, polynomial operations, and a few "real-world" exercises (marathon runners, cards, perfumes) that use linked lists as their data structure.
+A C# console project about **linked lists**. It is built around a generic `Node<T>` class and includes a library of list algorithms (iterative and recursive), a set of loop-free recursive exercises with a test suite, circular lists, chains with cycles (tortoise and hare), a copy constructor, polynomial operations, and a few "real-world" exercises (marathon runners, cards, perfumes) that use linked lists as their data structure.
 
 ## Project Structure
 
@@ -8,6 +8,8 @@ A C# console project about **linked lists**. It is built around a generic `Node<
 LinkChain/
 ├── Node.cs          # Generic Node<T> class + copy constructor
 ├── NodeUtils.cs     # List algorithms (build, print, sum, sort, merge, reverse...)
+├── NodeUtilsRecursive.cs # Recursive list exercises (no loops)
+├── NodeUtilsRecursiveTests.cs # Tests for NodeUtilsRecursive
 ├── NodesCircles.cs  # Circular linked list operations
 ├── ChainCycles.cs   # Chains with cycles - Floyd's tortoise and hare
 ├── Monomial.cs      # One polynomial term: factor and exponent
@@ -56,8 +58,10 @@ Most exercises have an iterative version and a recursive version (the recursive 
 - **Search:** `IsExist`, `MaxList`, `GetElement`
 - **Check:** `IsSorted`, `IsBalanced`
 - **Change:** `MakePositive`, `RemoveDuplicates`, `RemoveMax`, `RemoveMiddle`, `RemoveCommon`, `InsertAfterValue`
-- **Sorted lists:** `Insert2SortedList`, `SortList`, `MergeLists`, `Intersection`
+- **Sorted lists:** `Insert2SortedList`, `SortList`, `InsertionSort`, `MergeLists`, `Intersection`
 - **Other:** `ReverseList`, `CountSequences`, `MaxNegativeSeq`, `PrintBetween`
+
+`InsertionSort` sorts a list of integers in place by relinking the existing nodes. It takes O(n²) time in the worst case (O(n) for an already sorted list) and O(1) extra space. The head can change, so use the returned value: `head = NodeUtils.InsertionSort(head);`
 
 ### 2. Circular lists - `NodesCircles.cs`
 `BuildCircle`, `MakeCircular`, `BreakCircle`, `PrintCircle`, `IsCircleChain`, `CountCircleChain`, `SumCircle`, `ContainsCircle`, `AddFirst`, `AddLast`, `AddSumsBetween`, `AddBeforeEven`, `RemoveFirst`, `RemoveLast`, `RemoveEvens`
@@ -123,20 +127,42 @@ Here n and m are the input chain lengths. Extra working space excludes returned 
 
 `PolynomialTests.RunAll()` runs checks for formatting, getters/setters, sorting, reduction, evaluation and addition. It includes deterministic examples, generated inputs and some output-reference checks. A passing summary is useful evidence, not a guarantee that every possible property was tested.
 
+### 8. Recursive list exercises - `NodeUtilsRecursive.cs`, `NodeUtilsRecursiveTests.cs`
+A set of exercises on `Node<T>` lists written **without loops**: all repetition is recursion. Unless an exercise says otherwise, the methods relink the existing nodes and do not create new ones. Where a method returns a list, use the returned head, because the first node can change.
+
+| Method | What it does | Time | Space (call stack) |
+| --- | --- | --- | --- |
+| `RemoveAll(lst, x)` | Removes every node whose value is `x` | O(n) | O(n) |
+| `Reverse<T>(lst)` | Reverses the list by changing links only | O(n) | O(n) |
+| `MergeSorted(a, b)` | Merges two sorted lists; on equal values the node from `a` comes first | O(n + m) | O(n + m) |
+| `RemoveDuplicates(lst)` | Keeps the first node of each value in a sorted list | O(n) | O(n) |
+| `LongestAscRun(lst)` | Length of the longest strictly ascending run of neighbours | O(n) | O(n) |
+| `AddOne(lst)` | Adds 1 to a number stored as digits, most significant first (at most one new node) | O(n) | O(n) |
+| `AlternateSplit(lst, out odd, out even)` | Splits into the nodes in odd places and the nodes in even places | O(n) | O(n) |
+| `RemoveNthFromEnd(lst, n)` | Removes the n-th node from the end in one pass (`1 <= n <= length`) | O(n) | O(n) |
+| `IsPalindrome(lst)` | Checks a palindrome without changing the list (a `ref` parameter moves forward while the recursion returns) | O(n) | O(n) |
+| `MergeSort(lst)` | Merge sort using `MergeSorted` and recursive `Length` and `Split` helpers | O(n log n) | O(n) |
+| `MoveLast2First<T>(ls)` | Moves the last node to the front | O(n) | O(n) |
+| `InsertionSortRecursive(head)` | Sorts the rest recursively, then inserts the first node into it | O(n²) worst case | O(n) |
+
+Space is the depth of the call stack. For `MergeSort` the deepest stack comes from the helpers (`Length`, `MergeSorted`, `Split`), not from the halving, which is only about log n deep.
+
+`NodeUtilsRecursiveTests.RunAll()` runs every method above on fixed examples (including an empty list and a single node) and on seeded random lists, and prints the number of passed and failed checks. It compares the result against a simple model, checks that the same node objects are reused (no new nodes, except the one extra node `AddOne` may create), and that `IsPalindrome` does not change the list. For `MergeSort` and `InsertionSortRecursive` it checks the sorted order and that no node is lost or created. A failing check prints the input, the expected list and the actual list. A passing summary is good evidence, not a proof for every possible input.
+
 ## Running the Project
 
 The repository currently contains source files but no `.sln` or `.csproj`. Use the existing local LinkChain project in Visual Studio, or add the source files to a compatible C# Console App project. When creating a new project, replace its generated entry-point code with this project's `Program.cs` rather than keeping two entry points. Some existing files use .NET Framework-specific namespaces, so a .NET Framework Console App is the closest match for the current sources.
 
-The current `Main` runs the polynomial tests:
+The current `Main` runs the recursive exercise tests:
 
 ```csharp
 static void Main(string[] args)
 {
-    PolynomialTests.RunAll();
+    NodeUtilsRecursiveTests.RunAll();
 }
 ```
 
-Older test calls remain commented out in `Program.cs`. To work on another section, disable the polynomial call and enable the corresponding older test call, such as `TestChainCycles()` or `TestUtils.RunAll()`.
+Older test calls remain commented out in `Program.cs`. To work on another section, disable the recursive call and enable the corresponding older test call, such as `PolynomialTests.RunAll()`, `TestChainCycles()` or `TestUtils.RunAll()`.
 
 `TestChainCycles()` covers linear and cyclic chains, cycle measurements, breaking cycles and finding a middle node.
 
