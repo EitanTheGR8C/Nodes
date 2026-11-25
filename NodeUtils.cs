@@ -1022,7 +1022,7 @@ namespace LinkChain
         }
 
 
-        //time: N(o^2)
+        //time: O(n^2)
         public static Node<int> InsertionSort(Node<int> head)
         {
             if (head == null || !head.HasNext())

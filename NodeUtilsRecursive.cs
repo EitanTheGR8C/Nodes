@@ -13,14 +13,12 @@ namespace LinkChain
         public static Node<int> RemoveAll(Node<int> lst, int x)
         {
             if (lst == null)
-            { return null; }
+                return null;
+
             if (lst.GetValue() == x)
                 return RemoveAll(lst.GetNext(), x);
 
-            if (lst.GetNext().GetValue() == x)
-            { lst.SetNext(lst.GetNext().GetNext()); }
-            RemoveAll(lst.GetNext(), x);
-            
+            lst.SetNext(RemoveAll(lst.GetNext(), x));
             return lst;
         }
 

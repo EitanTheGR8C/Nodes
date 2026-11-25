@@ -20,9 +20,10 @@ namespace LinkChain
             //Test_Node(); //for constructive copying action
             //TestCircular(); // for circular 
             //TestChainCycles(); // for chain cycles
+            //PolynomialTests.RunAll(); // for polymoial
             #endregion old work
+            NodeUtilsRecursiveTests.RunAll();
 
-            PolynomialTests.RunAll();
         }
 
 
