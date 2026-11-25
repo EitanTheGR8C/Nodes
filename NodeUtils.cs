@@ -1020,5 +1020,50 @@ namespace LinkChain
 
             return head;
         }
+
+
+        //time: N(o^2)
+        public static Node<int> InsertionSort(Node<int> head)
+        {
+            if (head == null || !head.HasNext())
+                return head;
+
+            Node<int> lastSorted = head;
+            Node<int> current = head.GetNext();
+
+            while (current != null)
+            {
+                if (lastSorted.GetValue() <= current.GetValue())
+                {
+                    lastSorted = lastSorted.GetNext();
+                }
+                else
+                {
+                    lastSorted.SetNext(current.GetNext());
+
+                    if (current.GetValue() < head.GetValue())
+                    {
+                        current.SetNext(head);
+                        head = current;
+                    }
+                    else
+                    {
+                        Node<int> search = head;
+                        while (search.GetNext().GetValue() <= current.GetValue())
+                        {
+                            search = search.GetNext();
+                        }
+
+                        current.SetNext(search.GetNext());
+                        search.SetNext(current);
+                    }
+                }
+
+                current = lastSorted.GetNext();
+            }
+
+            return head;
+        }
+
     }
 }//YNWA//
